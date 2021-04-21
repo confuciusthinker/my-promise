@@ -4,6 +4,7 @@ function Promise(executor) {
     const _this = this;
 
     function resolve(data) {
+        if(_this.PromiseState !== 'pending') return;
         // 1.修改状态
         _this.PromiseState = 'fulfilled';
         // 2.设置对象结果值
@@ -11,6 +12,7 @@ function Promise(executor) {
     }
 
     function reject(data) {
+        if(_this.PromiseState !== 'pending') return;
         // 1.修改状态
         _this.PromiseState = 'rejected';
         // 2.设置对象结果值
