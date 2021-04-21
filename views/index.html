@@ -10,14 +10,17 @@
 <body>
     <script>
         let p = new Promise((resolve, reject) => {
-            resolve('OK');
+            // resolve('OK');
+            throw 'error'
         });
 
-        p.then(res => {
-            console.log(res);
-        }, err => {
-            console.warn(err);
-        })
+        console.log(p);
+
+        // p.then(res => {
+        //     console.log(res);
+        // }, err => {
+        //     console.warn(err);
+        // })
     </script>
 </body>
 </html>
