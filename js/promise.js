@@ -37,7 +37,9 @@ function Promise(executor) {
 }
 
 Promise.prototype.then = function(onResolved, onRejected) {
+    const _this = this;
     return new Promise((resolve, reject) => {
+        // 处理同步返回
         if(this.PromiseState === 'fulfilled') {
             // try-catch处理抛出异常
             try {
@@ -67,8 +69,44 @@ Promise.prototype.then = function(onResolved, onRejected) {
         if(this.PromiseState === 'pending') {
             // 处理指定多个回调
             this.callbacks.push({
-                onResolved,
-                onRejected,
+                onResolved: function() {
+                    try {
+                        // 获取回调函数的执行结果
+                        let result = onResolved(_this.PromiseResult);
+                        if(result instanceof Promise) {
+                            // 如果是Promise类型对象，则result的状态会影响最终的返回状态
+                            result.then(r => {
+                                resolve(r);
+                            }, e => {
+                                reject(e);
+                            })
+                        } else {
+                            // 结果的对象状态为【成功】
+                            resolve(result)
+                        }
+                    } catch (error) {
+                        reject(error);
+                    }
+                },
+                onRejected: function() {
+                    try {
+                        // 获取回调函数的执行结果
+                        let result = onRejected(_this.PromiseResult);
+                        if(result instanceof Promise) {
+                            // 如果是Promise类型对象，则result的状态会影响最终的返回状态
+                            result.then(r => {
+                                resolve(r);
+                            }, e => {
+                                reject(e);
+                            })
+                        } else {
+                            // 结果的对象状态为【成功】
+                            resolve(result)
+                        }
+                    } catch (error) {
+                        reject(error);
+                    }
+                },
             });
         }
     })

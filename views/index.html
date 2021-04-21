@@ -10,7 +10,10 @@
 <body>
     <script>
         let p = new Promise((resolve, reject) => {
-            resolve('OK');
+            setTimeout(() => {
+                // resolve('OK');
+                reject('fail')
+            }, 1000)
         });
 
         console.log(p);
@@ -23,6 +26,10 @@
             });
         }, err => {
             console.warn(err);
+            // return 'oh fail';
+            return new Promise((resolve, reject) => {
+                resolve('oh no failed');
+            });
         })
 
         console.log(res);
