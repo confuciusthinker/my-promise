@@ -37,21 +37,40 @@ function Promise(executor) {
 }
 
 Promise.prototype.then = function(onResolved, onRejected) {
-    if(this.PromiseState === 'fulfilled') {
-        onResolved(this.PromiseResult);
-    }
-
-    if(this.PromiseState === 'rejected') {
-        onRejected(this.PromiseResult);
-    }
-
-    // 保存回调函数(处理异步)
-    if(this.PromiseState === 'pending') {
-        // 处理指定多个回调
-        this.callbacks.push({
-            onResolved,
-            onRejected,
-        });
-    }
+    return new Promise((resolve, reject) => {
+        if(this.PromiseState === 'fulfilled') {
+            // try-catch处理抛出异常
+            try {
+                // 获取回调函数的执行结果
+                let result = onResolved(this.PromiseResult);
+                if(result instanceof Promise) {
+                    // 如果是Promise类型对象，则result的状态会影响最终的返回状态
+                    result.then(r => {
+                        resolve(r);
+                    }, e => {
+                        reject(e);
+                    })
+                } else {
+                    // 结果的对象状态为【成功】
+                    resolve(result)
+                }
+            } catch (error) {
+                reject(error);
+            }
+        }
+    
+        if(this.PromiseState === 'rejected') {
+            onRejected(this.PromiseResult);
+        }
+    
+        // 保存回调函数(处理异步)
+        if(this.PromiseState === 'pending') {
+            // 处理指定多个回调
+            this.callbacks.push({
+                onResolved,
+                onRejected,
+            });
+        }
+    })
 }
 
