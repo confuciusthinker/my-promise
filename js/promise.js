@@ -39,12 +39,11 @@ function Promise(executor) {
 Promise.prototype.then = function(onResolved, onRejected) {
     const _this = this;
     return new Promise((resolve, reject) => {
-        // 处理同步返回
-        if(this.PromiseState === 'fulfilled') {
+        function callback(fn) {
             // try-catch处理抛出异常
             try {
                 // 获取回调函数的执行结果
-                let result = onResolved(this.PromiseResult);
+                let result = fn(_this.PromiseResult);
                 if(result instanceof Promise) {
                     // 如果是Promise类型对象，则result的状态会影响最终的返回状态
                     result.then(r => {
@@ -59,10 +58,15 @@ Promise.prototype.then = function(onResolved, onRejected) {
             } catch (error) {
                 reject(error);
             }
+        }   
+
+        // 处理同步返回
+        if(this.PromiseState === 'fulfilled') {
+            callback(onResolved);
         }
     
         if(this.PromiseState === 'rejected') {
-            onRejected(this.PromiseResult);
+            callback(onRejected)
         }
     
         // 保存回调函数(处理异步)
@@ -70,42 +74,10 @@ Promise.prototype.then = function(onResolved, onRejected) {
             // 处理指定多个回调
             this.callbacks.push({
                 onResolved: function() {
-                    try {
-                        // 获取回调函数的执行结果
-                        let result = onResolved(_this.PromiseResult);
-                        if(result instanceof Promise) {
-                            // 如果是Promise类型对象，则result的状态会影响最终的返回状态
-                            result.then(r => {
-                                resolve(r);
-                            }, e => {
-                                reject(e);
-                            })
-                        } else {
-                            // 结果的对象状态为【成功】
-                            resolve(result)
-                        }
-                    } catch (error) {
-                        reject(error);
-                    }
+                    callback(onResolved);
                 },
                 onRejected: function() {
-                    try {
-                        // 获取回调函数的执行结果
-                        let result = onRejected(_this.PromiseResult);
-                        if(result instanceof Promise) {
-                            // 如果是Promise类型对象，则result的状态会影响最终的返回状态
-                            result.then(r => {
-                                resolve(r);
-                            }, e => {
-                                reject(e);
-                            })
-                        } else {
-                            // 结果的对象状态为【成功】
-                            resolve(result)
-                        }
-                    } catch (error) {
-                        reject(error);
-                    }
+                    callback(onRejected);
                 },
             });
         }
