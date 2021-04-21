@@ -10,18 +10,28 @@
 <body>
     <script>
         let p = new Promise((resolve, reject) => {
-            resolve('OK');
-            reject('error');
+            setTimeout(() => {
+                resolve('OK');
+                // reject('error');
+            }, 1000);
             // throw 'error'
         });
 
         console.log(p);
 
-        // p.then(res => {
-        //     console.log(res);
-        // }, err => {
-        //     console.warn(err);
-        // })
+        p.then(res => {
+            console.log(res);
+        }, err => {
+            console.warn(err);
+        })
+
+        p.then(res => {
+            alert(res);
+        }, err => {
+            alert(err);
+        })
+
+        console.log(p);
     </script>
 </body>
 </html>
