@@ -100,3 +100,18 @@ Promise.prototype.then = function(onResolved, onRejected) {
 Promise.prototype.catch = function(onRejected) {
     return this.then(undefined, onRejected);
 }
+
+
+Promise.resolve = function(value) {
+    return new Promise((resolve, reject) => {
+        if(value instanceof Promise) {
+            value.then(v => {
+                resolve(v)
+            }, e => {
+                reject(e)
+            })
+        } else {
+            resolve(value)
+        }
+    })
+}
