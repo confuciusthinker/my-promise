@@ -121,3 +121,25 @@ Promise.reject = function(value) {
         reject(value);
     })
 }
+
+
+Promise.all = function(promises) {
+    return new Promise((resolve, reject) => {
+        let count = 0;
+        let arr = [];
+
+        for(let i = 0; i < promises.length; i++) {
+            promises[i].then(v => {
+                // 在这里知道当前promise是否成功
+                count++;
+                // 为了保证顺序
+                arr[i] = v;
+                if(count === promises.length) {
+                    resolve(arr);
+                }
+            }, e => {
+                reject(e);
+            })
+        }
+    })
+}
