@@ -10,27 +10,22 @@
 <body>
     <script>
         let p = new Promise((resolve, reject) => {
-            // setTimeout(() => {
-            //     reject('fail')
-            // }, 1000)
+            setTimeout(() => {
+                resolve('OK');
+            }, 1000)
             // reject('fail');
-            resolve('OK');
+            // resolve('OK');
         });
 
         console.log(p);
 
-        const res = p.then(res => {
-            console.log(res);
-            // return 'hello promise';
-            return new Promise((resolve, reject) => {
-                resolve('success');
-            });
-        }, err => {
-            console.warn(err);
-            // return 'oh fail';
-            return new Promise((resolve, reject) => {
-                resolve('oh no failed');
-            });
+        let res = p.then().then(value => {
+            console.log(222);
+        }).then(value => {
+            console.log(333);
+            throw 'fail';
+        }).catch(reason => {
+            console.warn(reason);
         })
 
         console.log(res);

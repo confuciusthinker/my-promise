@@ -38,6 +38,18 @@ function Promise(executor) {
 
 Promise.prototype.then = function(onResolved, onRejected) {
     const _this = this;
+    // 异常穿透
+    if(typeof onRejected !== 'function') {
+        onRejected = reason => {
+            throw reason;
+        }
+    }
+
+    // 值传递
+    if(typeof onResolved !== 'function') {
+        onResolved = value => value;
+    }
+
     return new Promise((resolve, reject) => {
         function callback(fn) {
             // try-catch处理抛出异常
@@ -84,3 +96,7 @@ Promise.prototype.then = function(onResolved, onRejected) {
     })
 }
 
+
+Promise.prototype.catch = function(onRejected) {
+    return this.then(undefined, onRejected);
+}
