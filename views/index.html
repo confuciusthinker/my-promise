@@ -14,13 +14,13 @@
                 resolve('Ok');
             }, 1000)
         })
-        const p1 = Promise.resolve(new Promise((resolve, reject) => {
+        const p1 = Promise.reject(new Promise((resolve, reject) => {
             resolve('Success');
         }));
 
         const p2 = Promise.resolve('Oh yeah');
 
-        const p3 = Promise.all([p, p1, p2]);
+        const p3 = Promise.race([p, p1, p2]);
         console.log(p3);
     </script>
 </body>
