@@ -10,18 +10,16 @@
 <body>
     <script>
         const p = new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve('Ok');
-            }, 1000)
+            resolve('Ok');
+            console.log(111);
         })
-        const p1 = Promise.reject(new Promise((resolve, reject) => {
-            resolve('Success');
-        }));
 
-        const p2 = Promise.resolve('Oh yeah');
+        p.then(value => {
+            console.log(222);
+        });
+        
+        console.log(333);
 
-        const p3 = Promise.race([p, p1, p2]);
-        console.log(p3);
     </script>
 </body>
 </html>

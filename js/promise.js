@@ -11,9 +11,11 @@ function Promise(executor) {
         // 2.设置对象结果值
         _this.PromiseResult = data;
         // 执行成功的回调函数
-        _this.callbacks.forEach(item => {
-            item.onResolved(data);
-        });
+        setTimeout(() => {
+            _this.callbacks.forEach(item => {
+                item.onResolved(data);
+            });
+        })
     }
 
     function reject(data) {
@@ -23,9 +25,11 @@ function Promise(executor) {
         // 2.设置对象结果值
         _this.PromiseResult = data;
         // 执行失败的回调函数
-        _this.callbacks.forEach(item => {
-            item.onRejected(data);
-        });
+        setTimeout(() => {
+            _this.callbacks.forEach(item => {
+                item.onRejected(data);
+            });
+        })
     }
 
     try {
@@ -74,11 +78,15 @@ Promise.prototype.then = function(onResolved, onRejected) {
 
         // 处理同步返回
         if(this.PromiseState === 'fulfilled') {
-            callback(onResolved);
+            setTimeout(() => {
+                callback(onResolved);
+            })
         }
     
         if(this.PromiseState === 'rejected') {
-            callback(onRejected)
+            setTimeout(() => {
+                callback(onRejected);
+            })
         }
     
         // 保存回调函数(处理异步)
