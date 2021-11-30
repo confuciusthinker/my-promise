@@ -78,22 +78,22 @@ class Promise {
             }   
 
             // 处理同步返回
-            if(this.PromiseState === 'fulfilled') {
+            if(_this.PromiseState === 'fulfilled') {
                 setTimeout(() => {
                     callback(onResolved);
                 })
             }
         
-            if(this.PromiseState === 'rejected') {
+            if(_this.PromiseState === 'rejected') {
                 setTimeout(() => {
                     callback(onRejected);
                 })
             }
         
             // 保存回调函数(处理异步)
-            if(this.PromiseState === 'pending') {
+            if(_this.PromiseState === 'pending') {
                 // 处理指定多个回调
-                this.callbacks.push({
+                _this.callbacks.push({
                     onResolved: function() {
                         callback(onResolved);
                     },
